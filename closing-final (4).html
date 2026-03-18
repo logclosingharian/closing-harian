@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Closing Harian — Saudara Cell</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#09090f;--s1:#111118;--s2:#18181f;--border:#2a2a38;
+  --accent:#6c63ff;--as:rgba(108,99,255,0.12);
+  --green:#3ecf8e;--gs:rgba(62,207,142,0.1);
+  --orange:#f5a623;--os:rgba(245,166,35,0.1);
+  --red:#f56342;--rs:rgba(245,99,66,0.1);
+  --blue:#4da6ff;--bs:rgba(77,166,255,0.1);
+  --yellow:#f5d020;--ys:rgba(245,208,32,0.1);
+  --text:#e2e2ee;--muted:#6b6b80;--muted2:#9090a8;
+  --sans:"Plus Jakarta Sans",sans-serif;--mono:"DM Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);padding-bottom:80px;}
+.hdr{background:#13131c;border-bottom:1px solid var(--border);padding:16px 16px 12px;position:sticky;top:0;z-index:100;}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.hdr h1{font-size:16px;font-weight:700;} .hdr h1 b{color:var(--accent);}
+.dbadge{font-family:var(--mono);font-size:11px;color:var(--muted2);background:var(--s2);padding:4px 10px;border-radius:20px;border:1px solid var(--border);}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tbtn{flex-shrink:0;padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted2);font-family:var(--sans);font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;}
+.tbtn.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+.panel{display:none;padding:14px;} .panel.on{display:block;}
+.card{background:var(--s1);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:10px;}
+.chead{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.ig{background:var(--gs);}.ib{background:var(--bs);}.io{background:var(--os);}.iy{background:var(--ys);}.ip{background:var(--as);}
+.ctit{font-size:13px;font-weight:700;}.csub{font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:1px;}
+.field{margin-bottom:9px;}
+.field label{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--muted2);margin-bottom:4px;font-family:var(--mono);}
+.field input{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:9px 11px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;transition:border-color 0.15s;-webkit-appearance:none;}
+.field input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--as);}
+.field input::placeholder{color:var(--muted);font-size:12px;}
+.field textarea{width:100%;background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:9px 11px;color:var(--text);font-family:var(--mono);font-size:13px;outline:none;resize:none;}
+.field textarea:focus{border-color:var(--accent);}
+.bfix{font-size:9px;background:var(--gs);color:var(--green);padding:1px 6px;border-radius:8px;border:1px solid rgba(62,207,142,0.2);}
+.bwarn{font-size:9px;background:var(--os);color:var(--orange);padding:1px 6px;border-radius:8px;border:1px solid rgba(245,166,35,0.2);}
+.btrack{font-size:9px;background:var(--ys);color:var(--yellow);padding:1px 6px;border-radius:8px;border:1px solid rgba(245,208,32,0.2);}
+.binfo{font-size:9px;background:var(--bs);color:var(--blue);padding:1px 6px;border-radius:8px;border:1px solid rgba(77,166,255,0.2);}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.div{height:1px;background:var(--border);margin:10px 0;}
+.slbl{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.stitle{font-size:11px;font-weight:700;color:var(--muted2);letter-spacing:0.5px;text-transform:uppercase;margin:14px 0 8px;padding-left:2px;}
+.rr{display:flex;justify-content:space-between;align-items:center;padding:6px 0;font-size:12px;border-bottom:1px solid rgba(255,255,255,0.03);}
+.rr:last-child{border-bottom:none;}
+.rl{color:var(--muted2);flex:1;}.rv{font-family:var(--mono);font-weight:500;text-align:right;}
+.rr.bold .rl{color:var(--text);font-weight:700;}.rr.bold .rv{font-size:13px;font-weight:700;}
+.cg{color:var(--green)!important;}.cb{color:var(--blue)!important;}.co{color:var(--orange)!important;}.cr{color:var(--red)!important;}.cp{color:var(--accent)!important;}.cy{color:var(--yellow)!important;}
+.app-block{background:var(--s2);border:1px solid var(--border);border-radius:11px;padding:12px;margin-bottom:8px;}
+.app-block:last-child{margin-bottom:0;}
+.app-name{font-size:12px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.app-result{font-size:11px;font-family:var(--mono);color:var(--muted2);margin-top:6px;padding-top:6px;border-top:1px solid var(--border);display:flex;justify-content:space-between;}
+.stok-alert{background:var(--rs);border:1px solid rgba(245,99,66,0.3);border-radius:8px;padding:8px 12px;font-size:11px;color:var(--red);margin-top:6px;display:none;}
+.stok-alert.show{display:block;}
+.stok-warn{background:var(--ys);border:1px solid rgba(245,208,32,0.3);border-radius:8px;padding:8px 12px;font-size:11px;color:var(--yellow);margin-top:6px;display:none;}
+.stok-warn.show{display:block;}
+.omset-live{background:linear-gradient(135deg,rgba(62,207,142,0.1),rgba(108,99,255,0.08));border:1px solid rgba(62,207,142,0.2);border-radius:12px;padding:14px;margin-bottom:10px;}
+.omset-live-lbl{font-size:10px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.5px;}
+.omset-live-val{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--green);margin:4px 0 0;}
+.sb{border-radius:10px;padding:12px 14px;margin-top:8px;display:flex;align-items:center;justify-content:space-between;}
+.sb-ok{background:var(--gs);border:1px solid rgba(62,207,142,0.25);}
+.sb-danger{background:var(--rs);border:1px solid rgba(245,99,66,0.25);}
+.sb .sl{font-size:12px;font-weight:700;}.sb .sr{font-family:var(--mono);font-size:14px;font-weight:700;}
+.sb-ok .sl,.sb-ok .sr{color:var(--green);}.sb-danger .sl,.sb-danger .sr{color:var(--red);}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.sc{border-radius:11px;padding:12px;}
+.sc .scl{font-size:9px;color:var(--muted);margin-bottom:4px;font-family:var(--mono);letter-spacing:0.3px;}
+.sc .scv{font-size:14px;font-weight:700;font-family:var(--mono);}
+.sc .scs{font-size:9px;color:var(--muted);margin-top:2px;font-family:var(--mono);}
+.sg-g{background:var(--gs);border:1px solid rgba(62,207,142,0.2);}.sg-g .scv{color:var(--green);}
+.sg-y{background:var(--ys);border:1px solid rgba(245,208,32,0.2);}.sg-y .scv{color:var(--yellow);}
+.sg-r{background:var(--rs);border:1px solid rgba(245,99,66,0.2);}.sg-r .scv{color:var(--red);}
+.bigbox{background:linear-gradient(135deg,rgba(108,99,255,0.18),rgba(77,166,255,0.1));border:1px solid rgba(108,99,255,0.35);border-radius:14px;padding:16px;margin-bottom:10px;}
+.bigbox h3{font-size:10px;font-weight:700;color:var(--muted2);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:12px;}
+.br{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;}
+.br:last-of-type{border-bottom:none;}
+.bk{color:var(--muted2);flex:1;}.bk small{display:block;font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:1px;}
+.bv{font-family:var(--mono);font-weight:700;color:var(--blue);}
+.btotal{margin-top:12px;padding-top:12px;border-top:1px solid rgba(108,99,255,0.35);display:flex;justify-content:space-between;align-items:center;}
+.btotal .btl{font-size:13px;font-weight:700;color:#fff;}.btotal .btv{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--accent);}
+.omset-box{background:linear-gradient(135deg,rgba(62,207,142,0.12),rgba(77,166,255,0.06));border:1px solid rgba(62,207,142,0.25);border-radius:14px;padding:16px;margin-bottom:10px;}
+.omset-lbl{font-size:10px;color:var(--muted);font-family:var(--mono);text-transform:uppercase;letter-spacing:0.5px;}
+.omset-val{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--green);margin:4px 0 2px;}
+.omset-cmp{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(62,207,142,0.15);}
+.oc-item{flex:1;background:rgba(0,0,0,0.2);border-radius:8px;padding:8px;text-align:center;}
+.oc-lbl{font-size:9px;color:var(--muted);font-family:var(--mono);}
+.oc-val{font-size:13px;font-weight:700;font-family:var(--mono);margin-top:2px;}
+.formula{background:rgba(0,0,0,0.3);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;font-family:var(--mono);font-size:11px;color:var(--muted2);line-height:1.9;}
+.formula .frow{display:flex;justify-content:space-between;}
+.formula .frow.total{border-top:1px solid var(--border);margin-top:6px;padding-top:6px;color:var(--green);font-weight:700;}
+.kirim-btn{width:100%;padding:15px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:var(--sans);font-size:14px;font-weight:700;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.kirim-btn:active{transform:scale(0.98);}
+.kirim-btn:disabled{background:#2a2a38;color:var(--muted);cursor:not-allowed;}
+.kirim-status{text-align:center;font-size:12px;font-family:var(--mono);margin-top:6px;min-height:18px;}
+.pin-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:999;align-items:center;justify-content:center;padding:20px;}
+.pin-overlay.show{display:flex!important;}
+.pin-box{background:#17171e;border:1px solid #2a2a38;border-radius:16px;padding:28px 24px;width:100%;max-width:300px;text-align:center;}
+.dot{width:13px;height:13px;border-radius:50%;background:#2a2a38;border:2px solid #3a3a50;transition:all 0.15s;display:inline-block;margin:0 5px;}
+.pin-key{background:#1e1e28;border:1px solid #2a2a38;border-radius:10px;padding:13px;color:#e2e2ee;font-size:17px;font-family:var(--sans);font-weight:600;cursor:pointer;width:100%;}
+.pin-key:active{background:var(--accent);}
+.wnote{background:var(--os);border:1px solid rgba(245,166,35,0.2);border-radius:8px;padding:10px 12px;font-size:11px;color:var(--orange);line-height:1.6;margin-top:8px;display:none;}
+.wnote.show{display:block;}
+.chip{padding:5px 11px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted2);font-size:11px;font-family:var(--sans);font-weight:600;cursor:pointer;transition:all 0.15s;}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.spin{display:inline-block;animation:spin 1s linear infinite;}@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-top"><h1>📊 <b>Saudara Cell</b> & Cabang</h1><div class="dbadge" id="dbadge">—</div></div>
+  <div class="tabs">
+    <button class="tbtn on" onclick="sw('pusat',this)" id="tab-pusat-btn">🏪 Saudara Cell</button>
+    <button class="tbtn"    onclick="sw('cabang',this)" id="tab-cabang-btn">🏬 Cabang</button>
+    <button class="tbtn"    onclick="showPin()" id="tab-hasil-btn">🔐 Hasil</button>
+  </div>
+</div>
+
+<!-- TAB SAUDARA CELL -->
+<div id="tab-pusat" class="panel on">
+  <div class="row2" style="margin-bottom:12px">
+    <div class="field"><label>Tanggal</label><input type="date" id="p_tgl"></div>
+    <div class="field"><label>Nama Karyawan</label><input type="text" id="p_nama" placeholder="Nama..."></div>
+  </div>
+
+  <div class="stitle">1️⃣ Modal Awal</div>
+  <div class="card">
+    <div class="chead"><div class="ico ip">💵</div><div><div class="ctit">Cash Pagi</div><div class="csub">uang tunai yang disiapkan pagi hari</div></div></div>
+    <div class="row2">
+      <div class="field"><label>Modal awal (cash pagi)</label><input type="number" id="p_modal_awal" placeholder="0"></div>
+      <div class="field"><label>Tambahan kasmod</label><input type="number" id="p_tambah_kasmod" placeholder="0"></div>
+    </div>
+    <div class="rr bold" style="margin-top:4px"><span class="rl">Total modal hari ini</span><span class="rv cp" id="p_total_modal">Rp 0</span></div>
+  </div>
+
+  <div class="stitle">2️⃣ Cash Fisik Closing</div>
+  <div class="card">
+    <div class="chead"><div class="ico ig">💰</div><div><div class="ctit">Uang Penjualan</div><div class="csub">sudah dipisah dari laci 300rb</div></div></div>
+    <div class="field"><label>Cash fisik <span class="binfo">sudah pisah laci 300rb</span></label><input type="number" id="p_cash" placeholder="0"></div>
+    <div class="field"><label>Laci <span class="bfix">PAS 300rb</span></label><input type="number" id="p_laci" value="300000" placeholder="300000"></div>
+    <div id="p_laci_warn" class="wnote">⚠️ Laci tidak pas Rp 300.000 — wajib isi keterangan!</div>
+    <div id="p_laci_ket_wrap" style="display:none;margin-top:8px">
+      <div class="field"><label>Keterangan laci <span class="bwarn">WAJIB</span></label><input type="text" id="p_laci_ket" placeholder="Alasan laci tidak pas 300rb..."></div>
+    </div>
+  </div>
+
+  <div class="stitle">3️⃣ Pos 2 — Digital</div>
+  <div class="card">
+    <div class="chead"><div class="ico ig">📱</div><div><div class="ctit">Aplikasi Digital</div><div class="csub">modal awal → saldo closing → pemakaian otomatis</div></div></div>
+    <div class="app-block">
+      <div class="app-name">⚡ Digital</div>
+      <div class="row2"><div class="field"><label>Modal awal</label><input type="number" id="p_digital_awal" placeholder="0"></div><div class="field"><label>Saldo closing</label><input type="number" id="p_digital_close" placeholder="0"></div></div>
+      <div class="app-result"><span>Pemakaian</span><span class="co" id="p_digital_pakai">Rp 0</span></div>
+    </div>
+    <div class="app-block">
+      <div class="app-name">🖥️ Digipos</div>
+      <div class="row2"><div class="field"><label>Modal awal</label><input type="number" id="p_digipos_awal" placeholder="0"></div><div class="field"><label>Saldo closing</label><input type="number" id="p_digipos_close" placeholder="0"></div></div>
+      <div class="app-result"><span>Pemakaian</span><span class="co" id="p_digipos_pakai">Rp 0</span></div>
+    </div>
+    <div class="app-block">
+      <div class="app-name">🟣 Rita</div>
+      <div class="row2"><div class="field"><label>Modal awal</label><input type="number" id="p_rita_awal" placeholder="0"></div><div class="field"><label>Saldo closing</label><input type="number" id="p_rita_close" placeholder="0"></div></div>
+      <div class="app-result"><span>Pemakaian</span><span class="co" id="p_rita_pakai">Rp 0</span></div>
+    </div>
+    <div class="app-block">
+      <div class="app-name">🔷 Sidiva</div>
+      <div class="row2"><div class="field"><label>Modal awal</label><input type="number" id="p_sidiva_awal" placeholder="0"></div><div class="field"><label>Saldo closing</label><input type="number" id="p_sidiva_close" placeholder="0"></div></div>
+      <div class="app-result"><span>Pemakaian</span><span class="co" id="p_sidiva_pakai">Rp 0</span></div>
+    </div>
+    <div class="app-block">
+      <div class="app-name">🔵 BCA Xpresi</div>
+      <div class="row2"><div class="field"><label>Modal awal</label><input type="number" id="p_bcax_awal" placeholder="0"></div><div class="field"><label>Saldo closing</label><input type="number" id="p_bcax_close" placeholder="0"></div></div>
+      <div class="app-result"><span>Pemakaian</span><span class="co" id="p_bcax_pakai">Rp 0</span></div>
+    </div>
+    <div class="div"></div>
+    <div class="rr bold"><span class="rl">Total pemakaian digital</span><span class="rv co" id="p_dig_tot">Rp 0</span></div>
+  </div>
+
+  <div class="stitle">4️⃣ Tracking Stok</div>
+
+  <!-- AUDIT COUNTDOWN BANNER -->
+  <div id="audit-banner" style="background:#1a1a2e;border:1px solid #6c63ff;border-radius:14px;padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;">
+    <div style="font-size:28px;">📋</div>
+    <div style="flex:1;">
+      <div style="font-size:11px;font-weight:700;color:#6c63ff;letter-spacing:1px;margin-bottom:4px;">AUDIT STOK BERIKUTNYA</div>
+      <div id="audit-countdown" style="font-family:var(--mono);font-size:15px;font-weight:700;color:#e2e2ee;"></div>
+      <div id="audit-tanggal" style="font-size:11px;color:var(--muted2);margin-top:2px;"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="chead"><div class="ico iy">📦</div><div><div class="ctit">Voucher per Operator</div><div class="csub">alert otomatis jika stok menipis atau habis</div></div></div>
+
+    <!-- VOUCHER TELKOMSEL -->
+    <div class="app-block">
+      <div class="app-name">🎫 Voucher Telkomsel <span class="btrack">TRACKING STOK</span></div>
+      <div class="row2"><div class="field"><label>Stok awal</label><input type="number" id="p_vtsel_awal" placeholder="0"></div><div class="field"><label>Stok closing</label><input type="number" id="p_vtsel_close" placeholder="0"></div></div>
+      <div class="field"><label>Minimum order</label><input type="number" id="p_vtsel_min" placeholder="contoh: 10"></div>
+      <div class="app-result"><span>Terjual hari ini</span><span class="cg" id="p_vtsel_terjual">0</span></div>
+      <div id="p_vtsel_alert" class="stok-alert">🚨 Stok Voucher Telkomsel habis / di bawah minimum!</div>
+      <div id="p_vtsel_warn" class="stok-warn">⚠️ Stok Voucher Telkomsel menipis</div>
+    </div>
+    <!-- VOUCHER XL -->
+    <div class="app-block">
+      <div class="app-name">🎫 Voucher XL <span class="btrack">TRACKING STOK</span></div>
+      <div class="row2"><div class="field"><label>Stok awal</label><input type="number" id="p_vxl_awal" placeholder="0"></div><div class="field"><label>Stok closing</label><input type="number" id="p_vxl_close" placeholder="0"></div></div>
+      <div class="field"><label>Minimum order</label><input type="number" id="p_vxl_min" placeholder="contoh: 10"></div>
+      <div class="app-result"><span>Terjual hari ini</span><span class="cg" id="p_vxl_terjual">0</span></div>
+      <div id="p_vxl_alert" class="stok-alert">🚨 Stok Voucher XL habis / di bawah minimum!</div>
+      <div id="p_vxl_warn" class="stok-warn">⚠️ Stok Voucher XL menipis</div>
+    </div>
+    <!-- VOUCHER AXIS -->
+    <div class="app-block">
+      <div class="app-name">🎫 Voucher Axis <span class="btrack">TRACKING STOK</span></div>
+      <div class="row2"><div class="field"><label>Stok awal</label><input type="number" id="p_vaxis_awal" placeholder="0"></div><div class="field"><label>Stok closing</label><input type="number" id="p_vaxis_close" placeholder="0"></div></div>
+      <div class="field"><label>Minimum order</label><input type="number" id="p_vaxis_min" placeholder="contoh: 10"></div>
+      <div class="app-result"><span>Terjual hari ini</span><span class="cg" id="p_vaxis_terjual">0</span></div>
+      <div id="p_vaxis_alert" class="stok-alert">🚨 Stok Voucher Axis habis / di bawah minimum!</div>
+      <div id="p_vaxis_warn" class="stok-warn">⚠️ Stok Voucher Axis menipis</div>
+    </div>
+    <!-- VOUCHER BYU -->
+    <div class="app-block">
+      <div class="app-name">🎫 Voucher ByU <span class="btrack">TRACKING STOK</span></div>
+      <div class="row2"><div class="field"><label>Stok awal</label><input type="number" id="p_vbyu_awal" placeholder="0"></div><div class="field"><label>Stok closing</label><input type="number" id="p_vbyu_close" placeholder="0"></div></div>
+      <div class="field"><label>Minimum order</label><input type="number" id="p_vbyu_min" placeholder="contoh: 10"></div>
+      <div class="app-result"><span>Terjual hari ini</span><span class="cg" id="p_vbyu_terjual">0</span></div>
+      <div id="p_vbyu_alert" class="stok-alert">🚨 Stok Voucher ByU habis / di bawah minimum!</div>
+      <div id="p_vbyu_warn" class="stok-warn">⚠️ Stok Voucher ByU menipis</div>
+    </div>
+    <!-- VOUCHER SMARTFREN -->
+    <div class="app-block">
+      <div class="app-name">🎫 Voucher Smartfren <span class="btrack">TRACKING STOK</span></div>
+      <div class="row2"><div class="field"><label>Stok awal</label><input type="number" id="p_vsfren_awal" placeholder="0"></div><div class="field"><label>Stok closing</label><input type="number" id="p_vsfren_close" placeholder="0"></div></div>
+      <div class="field"><label>Minimum order</label><input type="number" id="p_vsfren_min" placeholder="contoh: 10"></div>
+      <div class="app-result"><span>Terjual hari ini</span><span class="cg" id="p_vsfren_terjual">0</span></div>
+      <div id="p_vsfren_alert" class="stok-alert">🚨 Stok Voucher Smartfren habis / di bawah minimum!</div>
+      <div id="p_vsfren_warn" class="stok-warn">⚠️ Stok Voucher Smartfren menipis</div>
+    </div>
+    <!-- VOUCHER INDOSAT -->
+    <div class="app-block">
+      <div class="app-name">🎫 Voucher Indosat <span class="btrack">TRACKING STOK</span></div>
+      <div class="row2"><div class="field"><label>Stok awal</label><input type="number" id="p_vindo_awal" placeholder="0"></div><div class="field"><label>Stok closing</label><input type="number" id="p_vindo_close" placeholder="0"></div></div>
+      <div class="field"><label>Minimum order</label><input type="number" id="p_vindo_min" placeholder="contoh: 10"></div>
+      <div class="app-result"><span>Terjual hari ini</span><span class="cg" id="p_vindo_terjual">0</span></div>
+      <div id="p_vindo_alert" class="stok-alert">🚨 Stok Voucher Indosat habis / di bawah minimum!</div>
+      <div id="p_vindo_warn" class="stok-warn">⚠️ Stok Voucher Indosat menipis</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:12px;">
+    <div class="chead"><div class="ico ig">📱</div><div><div class="ctit">Perdana per Operator</div><div class="csub">alert otomatis jika stok menipis atau habis</div></div></div>
+
+    <!-- PERDANA TELKOMSEL -->
+    <div class="app-block">
+      <div class="app-name">📱 Perdana Telkomsel <span class="btrack">TRACKING STOK</span></div>
+      <div class="row2"><div class="field"><label>Stok awal</label><input type="number" id="p_ptsel_awal" placeholder="0"></div><div class="field"><label>Stok closing</label><input type="number" id="p_ptsel_close" placeholder="0"></div></div>
+      <div class="field"><label>Minimum order</label><input type="number" id="p_ptsel_min" placeholder="contoh: 5"></div>
+      <div class="app-result"><span>Terjual hari ini</span><span class="cg" id="p_ptsel_terjual">0</span></div>
+      <div id="p_ptsel_alert" class="stok-alert">🚨 Stok Perdana Telkomsel habis / di bawah minimum!</div>
+      <div id="p_ptsel_warn" class="stok-warn">⚠️ Stok Perdana Telkomsel menipis</div>
+    </div>
+    <!-- PERDANA XL -->
+    <div class="app-block">
+      <div class="app-name">📱 Perdana XL <span class="btrack">TRACKING STOK</span></div>
+      <div class="row2"><div class="field"><label>Stok awal</label><input type="number" id="p_pxl_awal" placeholder="0"></div><div class="field"><label>Stok closing</label><input type="number" id="p_pxl_close" placeholder="0"></div></div>
+      <div class="field"><label>Minimum order</label><input type="number" id="p_pxl_min" placeholder="contoh: 5"></div>
+      <div class="app-result"><span>Terjual hari ini</span><span class="cg" id="p_pxl_terjual">0</span></div>
+      <div id="p_pxl_alert" class="stok-alert">🚨 Stok Perdana XL habis / di bawah minimum!</div>
+      <div id="p_pxl_warn" class="stok-warn">⚠️ Stok Perdana XL menipis</div>
+    </div>
+    <!-- PERDANA AXIS -->
+    <div class="app-block">
+      <div class="app-name">📱 Perdana Axis <span class="btrack">TRACKING STOK</span></div>
+      <div class="row2"><div class="field"><label>Stok awal</label><input type="number" id="p_paxis_awal" placeholder="0"></div><div class="field"><label>Stok closing</label><input type="number" id="p_paxis_close" placeholder="0"></div></div>
+      <div class="field"><label>Minimum order</label><input type="number" id="p_paxis_min" placeholder="contoh: 5"></div>
+      <div class="app-result"><span>Terjual hari ini</span><span class="cg" id="p_paxis_terjual">0</span></div>
+      <div id="p_paxis_alert" class="stok-alert">🚨 Stok Perdana Axis habis / di bawah minimum!</div>
+      <div id="p_paxis_warn" class="stok-warn">⚠️ Stok Perdana Axis menipis</div>
+    </div>
+    <!-- PERDANA BYU -->
+    <div class="app-block">
+      <div class="app-name">📱 Perdana ByU <span class="btrack">TRACKING STOK</span></div>
+      <div class="row2"><div class="field"><label>Stok awal</label><input type="number" id="p_pbyu_awal" placeholder="0"></div><div class="field"><label>Stok closing</label><input type="number" id="p_pbyu_close" placeholder="0"></div></div>
+      <div class="field"><label>Minimum order</label><input type="number" id="p_pbyu_min" placeholder="contoh: 5"></div>
+      <div class="app-result"><span>Terjual hari ini</span><span class="cg" id="p_pbyu_terjual">0</span></div>
+      <div id="p_pbyu_alert" class="stok-alert">🚨 Stok Perdana ByU habis / di bawah minimum!</div>
+      <div id="p_pbyu_warn" class="stok-warn">⚠️ Stok Perdana ByU menipis</div>
+    </div>
+    <!-- PERDANA SMARTFREN -->
+    <div class="app-block">
+      <div class="app-name">📱 Perdana Smartfren <span class="btrack">TRACKING STOK</span></div>
+      <div class="row2"><div class="field"><label>Stok awal</label><input type="number" id="p_psfren_awal" placeholder="0"></div><div class="field"><label>Stok closing</label><input type="number" id="p_psfren_close" placeholder="0"></div></div>
+      <div class="field"><label>Minimum order</label><input type="number" id="p_psfren_min" placeholder="contoh: 5"></div>
+      <div class="app-result"><span>Terjual hari ini</span><span class="cg" id="p_psfren_terjual">0</span></div>
+      <div id="p_psfren_alert" class="stok-alert">🚨 Stok Perdana Smartfren habis / di bawah minimum!</div>
+      <div id="p_psfren_warn" class="stok-warn">⚠️ Stok Perdana Smartfren menipis</div>
+    </div>
+    <!-- PERDANA INDOSAT -->
+    <div class="app-block">
+      <div class="app-name">📱 Perdana Indosat <span class="btrack">TRACKING STOK</span></div>
+      <div class="row2"><div class="field"><label>Stok awal</label><input type="number" id="p_pindo_awal" placeholder="0"></div><div class="field"><label>Stok closing</label><input type="number" id="p_pindo_close" placeholder="0"></div></div>
+      <div class="field"><label>Minimum order</label><input type="number" id="p_pindo_min" placeholder="contoh: 5"></div>
+      <div class="app-result"><span>Terjual hari ini</span><span class="cg" id="p_pindo_terjual">0</span></div>
+      <div id="p_pindo_alert" class="stok-alert">🚨 Stok Perdana Indosat habis / di bawah minimum!</div>
+      <div id="p_pindo_warn" class="stok-warn">⚠️ Stok Perdana Indosat menipis</div>
+    </div>
+  </div>
+
+  <div class="stitle">5️⃣ Pos 1 — Saldo Bank & Dana <span class="binfo" style="font-size:10px;vertical-align:middle">TRACKING MODAL</span></div>
+  <div class="card">
+    <div class="chead"><div class="ico ib">🏦</div><div><div class="ctit">Bank & Dana</div><div class="csub">tracking saldo modal saja — tidak masuk omset</div></div></div>
+    <div class="app-block">
+      <div class="app-name">🔵 BCA</div>
+      <div class="row2"><div class="field"><label>Saldo awal</label><input type="number" id="p_bca_awal" placeholder="0"></div><div class="field"><label>Saldo closing</label><input type="number" id="p_bca_close" placeholder="0"></div></div>
+      <div class="app-result"><span>Perubahan BCA</span><span id="p_bca_delta">Rp 0</span></div>
+    </div>
+    <div class="app-block">
+      <div class="app-name">🟠 BNI</div>
+      <div class="row2"><div class="field"><label>Saldo awal</label><input type="number" id="p_bni_awal" placeholder="0"></div><div class="field"><label>Saldo closing</label><input type="number" id="p_bni_close" placeholder="0"></div></div>
+      <div class="app-result"><span>Perubahan BNI</span><span id="p_bni_delta">Rp 0</span></div>
+    </div>
+    <div class="app-block">
+      <div class="app-name">🔵 BRI</div>
+      <div class="row2"><div class="field"><label>Saldo awal</label><input type="number" id="p_bri_awal" placeholder="0"></div><div class="field"><label>Saldo closing</label><input type="number" id="p_bri_close" placeholder="0"></div></div>
+      <div class="app-result"><span>Perubahan BRI</span><span id="p_bri_delta">Rp 0</span></div>
+    </div>
+    <div class="app-block">
+      <div class="app-name">💚 Dana</div>
+      <div class="row2"><div class="field"><label>Saldo awal</label><input type="number" id="p_dana_awal" placeholder="0"></div><div class="field"><label>Saldo closing</label><input type="number" id="p_dana_close" placeholder="0"></div></div>
+      <div class="app-result"><span>Perubahan Dana</span><span id="p_dana_delta">Rp 0</span></div>
+    </div>
+  </div>
+
+  <div class="stitle">6️⃣ Pinjam Saldo Bank</div>
+  <div class="card">
+    <div class="field"><label>Total pinjam saldo bank hari ini <span class="bwarn">BALIK FULL</span></label><input type="number" id="p_pinjam_bank" placeholder="0"></div>
+  </div>
+
+  <div class="stitle">7️⃣ Total Transaksi Harian</div>
+  <div class="card">
+    <div class="chead"><div class="ico ig">📊</div><div><div class="ctit">Transaksi Harian</div><div class="csub">nominal + jumlah transaksi</div></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px">
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Jenis</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Nominal (Rp)</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Jml</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+      <div style="font-size:12px;font-weight:600">💸 Tarik Tunai</div>
+      <input type="number" id="p_trx_tarik" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      <input type="number" id="p_trx_tarik_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+      <div style="font-size:12px;font-weight:600">📲 Transfer</div>
+      <input type="number" id="p_trx_transfer" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      <input type="number" id="p_trx_transfer_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+      <div style="font-size:12px;font-weight:600">📱 Pulsa & Token</div>
+      <input type="number" id="p_trx_pulsa" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      <input type="number" id="p_trx_pulsa_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+      <div style="font-size:12px;font-weight:600">📦 Paket Data</div>
+      <input type="number" id="p_trx_data" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      <input type="number" id="p_trx_data_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+    </div>
+
+    <!-- PERDANA PER OPERATOR -->
+    <div style="height:1px;background:var(--border);margin:10px 0"></div>
+    <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:8px;letter-spacing:0.5px;">📱 PENJUALAN PERDANA</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px">
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Operator</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Nominal (Rp)</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Jml</div>
+    </div>
+    <div id="p_trx_perdana_rows">
+      <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+        <div style="font-size:12px;font-weight:600">Telkomsel</div>
+        <input type="number" id="p_trx_ptsel" placeholder="0" oninput="updateStokPerdana('ptsel',this.value)" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+        <input type="number" id="p_trx_ptsel_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+        <div style="font-size:12px;font-weight:600">XL</div>
+        <input type="number" id="p_trx_pxl" placeholder="0" oninput="updateStokPerdana('pxl',this.value)" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+        <input type="number" id="p_trx_pxl_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+        <div style="font-size:12px;font-weight:600">Axis</div>
+        <input type="number" id="p_trx_paxis" placeholder="0" oninput="updateStokPerdana('paxis',this.value)" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+        <input type="number" id="p_trx_paxis_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+        <div style="font-size:12px;font-weight:600">ByU</div>
+        <input type="number" id="p_trx_pbyu" placeholder="0" oninput="updateStokPerdana('pbyu',this.value)" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+        <input type="number" id="p_trx_pbyu_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+        <div style="font-size:12px;font-weight:600">Smartfren</div>
+        <input type="number" id="p_trx_psfren" placeholder="0" oninput="updateStokPerdana('psfren',this.value)" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+        <input type="number" id="p_trx_psfren_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+        <div style="font-size:12px;font-weight:600">Indosat</div>
+        <input type="number" id="p_trx_pindo" placeholder="0" oninput="updateStokPerdana('pindo',this.value)" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+        <input type="number" id="p_trx_pindo_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      </div>
+    </div>
+
+    <!-- ACC HP -->
+    <div style="height:1px;background:var(--border);margin:10px 0"></div>
+    <div style="font-size:11px;font-weight:700;color:var(--orange);margin-bottom:8px;letter-spacing:0.5px;">🛍️ PENJUALAN ACC HP</div>
+    <div style="display:grid;grid-template-columns:90px 1fr 1fr 60px;gap:6px;margin-bottom:6px">
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Kode</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Nama Barang</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Nominal</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Jml</div>
+    </div>
+    <div id="p_trx_acc_rows"></div>
+    <button onclick="tambahTrxAcc()" style="width:100%;margin-top:6px;padding:8px;background:var(--s2);border:1px dashed var(--border);border-radius:8px;color:var(--muted2);font-size:12px;cursor:pointer;">+ Tambah Penjualan Acc</button>
+
+    <div style="height:1px;background:var(--border);margin:8px 0"></div>
+    <div class="rr bold"><span class="rl">Total nominal</span><span class="rv cg" id="p_trx_total">Rp 0</span></div>
+    <div class="rr"><span class="rl">Total jumlah trx</span><span class="rv cb" id="p_trx_total_n">0 kali</span></div>
+  </div>
+
+  <!-- SO ACC HP -->
+  <div class="stitle">8️⃣ Stock Opname Acc HP</div>
+
+  <!-- AUDIT ACC COUNTDOWN -->
+  <div id="audit-acc-banner" style="background:#1a1a2e;border:1px solid var(--orange);border-radius:14px;padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;gap:12px;">
+    <div style="font-size:28px;">🛍️</div>
+    <div style="flex:1;">
+      <div style="font-size:11px;font-weight:700;color:var(--orange);letter-spacing:1px;margin-bottom:4px;">AUDIT ACC HP BERIKUTNYA</div>
+      <div id="audit-acc-countdown" style="font-family:var(--mono);font-size:15px;font-weight:700;color:#e2e2ee;"></div>
+      <div id="audit-acc-tanggal" style="font-size:11px;color:var(--muted2);margin-top:2px;"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="chead"><div class="ico io">🛍️</div><div><div class="ctit">Stock Opname Acc HP</div><div class="csub">Gudang 1 & Gudang 2 — terhubung transaksi harian</div></div></div>
+
+    <!-- SETUP BARANG -->
+    <div style="font-size:11px;font-weight:700;color:var(--accent);margin-bottom:10px;letter-spacing:0.5px;">⚙️ DAFTAR BARANG</div>
+    <div style="display:grid;grid-template-columns:80px 1fr 80px 70px 50px;gap:6px;margin-bottom:6px">
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Kode</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Nama Barang</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Gudang</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">SO Fisik</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Hapus</div>
+    </div>
+    <div id="so_acc_rows"></div>
+    <button onclick="tambahBarangAcc()" style="width:100%;margin-top:8px;padding:10px;background:var(--s2);border:1px dashed var(--accent);border-radius:8px;color:var(--accent);font-size:12px;font-weight:600;cursor:pointer;">+ Tambah Barang</button>
+
+    <!-- REKAP SO -->
+    <div style="height:1px;background:var(--border);margin:14px 0"></div>
+    <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:10px;letter-spacing:0.5px;">📊 REKAP SO HARI INI</div>
+    <div id="so_acc_rekap" style="font-size:12px;color:var(--muted2);">— isi daftar barang terlebih dahulu —</div>
+  </div>
+
+  <div class="stitle">8️⃣ Pengeluaran</div>
+  <div class="card">
+    <div class="row2">
+      <div class="field"><label>Uang makan</label><input type="number" id="p_makan" placeholder="0"></div>
+      <div class="field"><label>Lain-lain</label><input type="number" id="p_lainlain" placeholder="0"></div>
+    </div>
+    <div class="field"><label>Keterangan</label><input type="text" id="p_ket" placeholder="nihil / isi jika ada"></div>
+  </div>
+
+  <div class="omset-live">
+    <div class="omset-live-lbl">PREVIEW OMSET HARI INI</div>
+    <div class="omset-live-val" id="p_omset_preview">Rp 0</div>
+    <div style="font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:4px">cash fisik + pemakaian digital − modal awal − kasmod − pengeluaran</div>
+  </div>
+
+  <div class="card">
+    <button class="kirim-btn" id="p_kirim_btn" onclick="kirimData('pusat')">📤 Kirim ke Sheets</button>
+    <div class="kirim-status" id="p_kirim_status"></div>
+  </div>
+</div>
+
+<!-- TAB CABANG -->
+<div id="tab-cabang" class="panel">
+  <div class="row2" style="margin-bottom:12px">
+    <div class="field"><label>Tanggal</label><input type="date" id="c_tgl"></div>
+    <div class="field"><label>Nama Karyawan</label><input type="text" id="c_nama" placeholder="Nama..."></div>
+  </div>
+  <div class="stitle">1️⃣ Modal Awal</div>
+  <div class="card"><div class="field"><label>Modal awal (cash pagi)</label><input type="number" id="c_modal_awal" placeholder="0"></div></div>
+  <div class="stitle">2️⃣ Cash Fisik Closing</div>
+  <div class="card">
+    <div class="field"><label>Cash fisik <span class="binfo">sudah pisah laci 300rb</span></label><input type="number" id="c_cash" placeholder="0"></div>
+    <div class="field"><label>Laci <span class="bfix">PAS 300rb</span></label><input type="number" id="c_laci" value="300000" placeholder="300000"></div>
+    <div id="c_laci_warn" class="wnote">⚠️ Laci tidak pas Rp 300.000 — wajib isi keterangan!</div>
+    <div id="c_laci_ket_wrap" style="display:none;margin-top:8px"><div class="field"><label>Keterangan laci <span class="bwarn">WAJIB</span></label><input type="text" id="c_laci_ket" placeholder="Alasan..."></div></div>
+  </div>
+  <div class="stitle">3️⃣ Pinjam Saldo Bank</div>
+  <div class="card"><div class="field"><label>Total pinjam saldo bank hari ini <span class="bwarn">BALIK FULL</span></label><input type="number" id="c_pinjam_bank" placeholder="0"></div></div>
+  <div class="stitle">4️⃣ Digital</div>
+  <div class="card">
+    <div class="row2"><div class="field"><label>Modal awal digital</label><input type="number" id="c_dig_awal" placeholder="0"></div><div class="field"><label>Saldo closing digital</label><input type="number" id="c_dig_close" placeholder="0"></div></div>
+    <div class="rr"><span class="rl">Pemakaian digital</span><span class="rv co" id="c_dig_pakai">Rp 0</span></div>
+  </div>
+  <div class="stitle">5️⃣ Total Transaksi Harian</div>
+  <div class="card">
+    <div class="chead"><div class="ico ig">📊</div><div><div class="ctit">Transaksi Harian</div><div class="csub">nominal + jumlah transaksi</div></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px">
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Jenis</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Nominal (Rp)</div>
+      <div style="font-size:10px;color:var(--muted);font-family:var(--mono)">Jml</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+      <div style="font-size:12px;font-weight:600">💸 Tarik Tunai</div>
+      <input type="number" id="c_trx_tarik" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      <input type="number" id="c_trx_tarik_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+      <div style="font-size:12px;font-weight:600">📲 Transfer</div>
+      <input type="number" id="c_trx_transfer" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      <input type="number" id="c_trx_transfer_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+      <div style="font-size:12px;font-weight:600">📱 Pulsa & Token</div>
+      <input type="number" id="c_trx_pulsa" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      <input type="number" id="c_trx_pulsa_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 70px;gap:6px;margin-bottom:6px;align-items:center">
+      <div style="font-size:12px;font-weight:600">📦 Paket Data</div>
+      <input type="number" id="c_trx_data" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      <input type="number" id="c_trx_data_n" placeholder="0" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+    </div>
+    <div style="height:1px;background:var(--border);margin:8px 0"></div>
+    <div class="rr bold"><span class="rl">Total nominal</span><span class="rv cg" id="c_trx_total">Rp 0</span></div>
+    <div class="rr"><span class="rl">Total jumlah trx</span><span class="rv cb" id="c_trx_total_n">0 kali</span></div>
+  </div>
+
+  <div class="stitle">6️⃣ Pengeluaran</div>
+  <div class="card">
+    <div class="row2"><div class="field"><label>Uang makan</label><input type="number" id="c_makan" placeholder="0"></div><div class="field"><label>Lain-lain</label><input type="number" id="c_lainlain" placeholder="0"></div></div>
+    <div class="field"><label>Keterangan</label><input type="text" id="c_ket" placeholder="nihil / isi jika ada"></div>
+  </div>
+  <div class="stitle">7️⃣ Setor ke Pusat</div>
+  <div class="card"><div class="field"><label>TF ke pusat hari ini</label><input type="number" id="c_tf_pusat" placeholder="0"></div></div>
+  <div class="card">
+    <button class="kirim-btn" id="c_kirim_btn" onclick="kirimData('cabang')">📤 Kirim ke Sheets</button>
+    <div class="kirim-status" id="c_kirim_status"></div>
+  </div>
+</div>
+
+<!-- TAB HASIL -->
+<div id="tab-hasil" class="panel">
+  <div style="background:var(--as);border:1px solid rgba(108,99,255,0.3);border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:11px;color:var(--muted2);font-family:var(--mono);">🔐 Mode Pemilik</span>
+    <button onclick="lockHasil()" style="background:var(--rs);border:none;border-radius:6px;padding:3px 10px;color:var(--red);font-size:11px;font-family:var(--sans);font-weight:700;cursor:pointer;">Kunci</button>
+  </div>
+
+  <div class="omset-box">
+    <div class="omset-lbl">OMSET SAUDARA CELL HARI INI</div>
+    <div class="omset-val" id="h_omset">Rp 0</div>
+    <div id="h_omset_load" style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:6px;display:none"><span class="spin">⏳</span> Mengambil data kemarin...</div>
+    <div id="h_omset_cmp" class="omset-cmp" style="display:none">
+      <div class="oc-item"><div class="oc-lbl">KEMARIN</div><div class="oc-val" style="color:var(--blue)" id="h_kem">Rp 0</div></div>
+      <div class="oc-item"><div class="oc-lbl">SELISIH</div><div class="oc-val" id="h_diff">Rp 0</div></div>
+      <div class="oc-item"><div class="oc-lbl">TREND</div><div class="oc-val" id="h_trend">—</div></div>
+    </div>
+    <div id="h_omset_nodata" style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:8px">— Data kemarin belum tersedia</div>
+  </div>
+
+  <div class="formula">
+    <div class="frow"><span>Cash fisik closing</span><span style="color:var(--green)" id="hf_cash">+ Rp 0</span></div>
+    <div class="frow"><span>Pemakaian digital (Pos 2)</span><span style="color:var(--green)" id="hf_dig">+ Rp 0</span></div>
+    <div class="frow"><span>Modal awal</span><span style="color:var(--red)" id="hf_modal">− Rp 0</span></div>
+    <div class="frow"><span>Tambahan kasmod</span><span style="color:var(--red)" id="hf_kasmod">− Rp 0</span></div>
+    <div class="frow"><span>Pengeluaran</span><span style="color:var(--red)" id="hf_keluar">− Rp 0</span></div>
+    <div class="frow total"><span>= OMSET</span><span id="hf_omset">Rp 0</span></div>
+  </div>
+
+  <div class="stitle">📱 Rincian Pos 2</div>
+  <div class="card">
+    <div class="rr"><span class="rl">Digital</span><span class="rv co" id="h_digital">Rp 0</span></div>
+    <div class="rr"><span class="rl">Digipos</span><span class="rv co" id="h_digipos">Rp 0</span></div>
+    <div class="rr"><span class="rl">Rita</span><span class="rv co" id="h_rita">Rp 0</span></div>
+    <div class="rr"><span class="rl">Sidiva</span><span class="rv co" id="h_sidiva">Rp 0</span></div>
+    <div class="rr"><span class="rl">BCA Xpresi</span><span class="rv co" id="h_bcax">Rp 0</span></div>
+    <div class="div"></div>
+    <div class="rr bold"><span class="rl">Total pemakaian digital</span><span class="rv co" id="h_dig_tot">Rp 0</span></div>
+  </div>
+
+  <div class="stitle">🏦 Pos 1 — Perubahan Saldo Modal</div>
+  <div class="card">
+    <div class="rr"><span class="rl">BCA</span><span class="rv" id="h_bca">Rp 0</span></div>
+    <div class="rr"><span class="rl">BNI</span><span class="rv" id="h_bni">Rp 0</span></div>
+    <div class="rr"><span class="rl">BRI</span><span class="rv" id="h_bri">Rp 0</span></div>
+    <div class="rr"><span class="rl">Dana</span><span class="rv" id="h_dana">Rp 0</span></div>
+    <div style="font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">🟢 + = saldo bertambah &nbsp;|&nbsp; 🟠 − = saldo berkurang (dipakai)</div>
+  </div>
+
+  <div class="stitle">📦 Tracking Stok</div>
+  <div class="sg">
+    <div class="sc sg-g" id="h_v_card"><div class="scl">VOUCHER SISA</div><div class="scv" id="h_v_stok">0</div><div class="scs" id="h_v_sts">—</div></div>
+    <div class="sc sg-g" id="h_p_card"><div class="scl">PERDANA SISA</div><div class="scv" id="h_p_stok">0</div><div class="scs" id="h_p_sts">—</div></div>
+  </div>
+  <div class="card">
+    <div class="rr"><span class="rl">Voucher terjual hari ini</span><span class="rv cg" id="h_v_jual">0</span></div>
+    <div class="rr"><span class="rl">Perdana terjual hari ini</span><span class="rv cg" id="h_p_jual">0</span></div>
+  </div>
+
+  <div class="bigbox">
+    <h3>Wajib Balik — Saudara Cell</h3>
+    <div class="br"><div class="bk">Pemakaian digital Pos 2<small>balik pemakaian saja</small></div><span class="bv" id="h_wb_dig">Rp 0</span></div>
+    <div class="br"><div class="bk">Pinjam saldo bank<small>balik full</small></div><span class="bv" id="h_wb_bank">Rp 0</span></div>
+    <div class="btotal"><span class="btl">TOTAL WAJIB BALIK</span><span class="btv" id="h_wb_tot">Rp 0</span></div>
+  </div>
+
+  <div class="stitle">🏬 Cabang</div>
+  <div class="bigbox">
+    <h3>Wajib Balik — Cabang</h3>
+    <div class="br"><div class="bk">Pemakaian digital<small>balik pemakaian saja</small></div><span class="bv" id="h_c_dig">Rp 0</span></div>
+    <div class="br"><div class="bk">Pinjam saldo bank<small>balik full</small></div><span class="bv" id="h_c_bank">Rp 0</span></div>
+    <div class="btotal"><span class="btl">TOTAL WAJIB BALIK</span><span class="btv" id="h_c_tot">Rp 0</span></div>
+  </div>
+  <div class="card">
+    <div class="rr bold"><span class="rl">Total wajib balik</span><span class="rv cr" id="h_c_wajib">Rp 0</span></div>
+    <div class="rr"><span class="rl">TF ke pusat</span><span class="rv cg" id="h_c_tf">Rp 0</span></div>
+    <div class="div"></div>
+    <div class="sb sb-ok" id="h_c_sb"><span class="sl" id="h_c_sl">— Belum ada data</span><span class="sr" id="h_c_sv">Rp 0</span></div>
+  </div>
+
+  <div class="stitle">📝 Analisa</div>
+  <div class="card">
+    <div class="field" style="margin-bottom:10px"><label>Kondisi hari ini</label>
+      <div class="chips"><button class="chip" onclick="chipSingle(this)">🔥 Ramai</button><button class="chip" onclick="chipSingle(this)">😐 Normal</button><button class="chip" onclick="chipSingle(this)">🥶 Sepi</button></div>
+    </div>
+    <div class="field" style="margin-bottom:10px"><label>Produk / transaksi yang ramai</label>
+      <div class="chips">
+        <button class="chip" onclick="this.classList.toggle('on')">💸 Tarik Tunai</button>
+        <button class="chip" onclick="this.classList.toggle('on')">📲 Transfer</button>
+        <button class="chip" onclick="this.classList.toggle('on')">📱 Pulsa/Data</button>
+        <button class="chip" onclick="this.classList.toggle('on')">🎫 Voucher</button>
+        <button class="chip" onclick="this.classList.toggle('on')">💳 Bayar Tagihan</button>
+        <button class="chip" onclick="this.classList.toggle('on')">📦 Perdana</button>
+        <button class="chip" onclick="this.classList.toggle('on')">🔵 BCA Xpresi</button>
+      </div>
+    </div>
+    <div class="field"><label>Catatan / alasan / USP hari ini</label><textarea id="h_catatan" rows="3" placeholder="contoh: gajian, tanggal muda, promo, produk X lagi ramai, dll..."></textarea></div>
+  </div>
+</div>
+
+<!-- PIN MODAL -->
+<div class="pin-overlay" id="pin-overlay">
+  <div class="pin-box">
+    <div style="font-size:26px;margin-bottom:8px">🔐</div>
+    <div style="font-size:15px;font-weight:700;margin-bottom:4px">Masukkan PIN</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:18px;font-family:var(--mono)">Khusus pemilik</div>
+    <div style="display:flex;justify-content:center;gap:8px;margin-bottom:18px"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:10px">
+      <button class="pin-key" onclick="pinKey('1')">1</button><button class="pin-key" onclick="pinKey('2')">2</button><button class="pin-key" onclick="pinKey('3')">3</button>
+      <button class="pin-key" onclick="pinKey('4')">4</button><button class="pin-key" onclick="pinKey('5')">5</button><button class="pin-key" onclick="pinKey('6')">6</button>
+      <button class="pin-key" onclick="pinKey('7')">7</button><button class="pin-key" onclick="pinKey('8')">8</button><button class="pin-key" onclick="pinKey('9')">9</button>
+      <button class="pin-key" onclick="pinClear()" style="background:#1e1e28;color:var(--orange)">⌫</button>
+      <button class="pin-key" onclick="pinKey('0')">0</button>
+      <button class="pin-key" onclick="pinClose()" style="background:#1e1e28;color:var(--red)">✕</button>
+    </div>
+    <div id="pin-error" style="font-size:11px;color:var(--red);font-family:var(--mono);height:16px;"></div>
+  </div>
+</div>
+
+<script>
+const SHEET_URL='https://script.google.com/macros/s/AKfycbxNMFio96EmuKIlyGS6WtbDENSkmPtQ9zhlVOvsPCMlEBpNz6VVxHuOtmpbtqxx2XXDDA/exec';
+const PIN='888888';
+const g=id=>document.getElementById(id);
+const v=id=>parseFloat(g(id)?.value)||0;
+const vs=id=>g(id)?.value||'';
+const s=(id,val)=>{if(g(id))g(id).textContent=val;};
+const fmt=n=>'Rp '+Math.round(Math.abs(n)).toLocaleString('id-ID');
+const fmtS=n=>n>=0?'+ '+fmt(n):'− '+fmt(Math.abs(n));
+let omsetKemarin=null;
+
+function sw(name,btn){
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');g('tab-'+name).classList.add('on');window.scrollTo(0,0);
+}
+
+let pinEntry='',pinUnlocked=false;
+function showPin(){if(pinUnlocked){openHasil();return;}pinEntry='';updateDots();g('pin-error').textContent='';g('pin-overlay').classList.add('show');}
+function pinClose(){g('pin-overlay').classList.remove('show');pinEntry='';updateDots();}
+function pinKey(k){if(pinEntry.length>=6)return;pinEntry+=k;updateDots();if(pinEntry.length===6)setTimeout(checkPin,150);}
+function pinClear(){pinEntry=pinEntry.slice(0,-1);updateDots();g('pin-error').textContent='';}
+function updateDots(){document.querySelectorAll('.dot').forEach((d,i)=>{d.style.background=i<pinEntry.length?'#6c63ff':'#2a2a38';d.style.borderColor=i<pinEntry.length?'#6c63ff':'#3a3a50';});}
+function checkPin(){
+  if(pinEntry===PIN){pinUnlocked=true;g('pin-overlay').classList.remove('show');openHasil();}
+  else{g('pin-error').textContent='❌ PIN salah, coba lagi';pinEntry='';document.querySelectorAll('.dot').forEach(d=>{d.style.background='#f56342';d.style.borderColor='#f56342';});setTimeout(updateDots,600);}
+}
+function openHasil(){
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  g('tab-hasil-btn').classList.add('on');g('tab-hasil').classList.add('on');
+  updateHasil();fetchOmsetKemarin();window.scrollTo(0,0);
+}
+function lockHasil(){
+  pinUnlocked=false;pinEntry='';
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  g('tab-pusat-btn').classList.add('on');g('tab-pusat').classList.add('on');
+}
+
+const APPS=['digital','digipos','rita','sidiva','bcax'];
+function hitungOmset(){
+  const dig2=APPS.reduce((sum,a)=>sum+(v('p_'+a+'_awal')-v('p_'+a+'_close')),0);
+  return v('p_cash')+dig2-v('p_modal_awal')-v('p_tambah_kasmod')-v('p_makan')-v('p_lainlain');
+}
+
+function calc(){
+  const tgl=g('p_tgl').value||g('c_tgl').value;
+  if(tgl)g('dbadge').textContent=new Date(tgl).toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'});
+  s('p_total_modal',fmt(v('p_modal_awal')+v('p_tambah_kasmod')));
+  APPS.forEach(a=>s('p_'+a+'_pakai',fmt(v('p_'+a+'_awal')-v('p_'+a+'_close'))));
+  const dig2=APPS.reduce((sum,a)=>sum+(v('p_'+a+'_awal')-v('p_'+a+'_close')),0);
+  s('p_dig_tot',fmt(dig2));
+  ['bca','bni','bri','dana'].forEach(b=>{
+    const delta=v('p_'+b+'_close')-v('p_'+b+'_awal');
+    const el=g('p_'+b+'_delta');
+    if(el){el.textContent=fmtS(delta);el.style.color=delta>=0?'var(--green)':'var(--orange)';}
+  });
+  // Stok per operator
+  const VOUCHER_OPS=['vtsel','vxl','vaxis','vbyu','vsfren','vindo'];
+  const PERDANA_OPS=['ptsel','pxl','paxis','pbyu','psfren','pindo'];
+  VOUCHER_OPS.forEach(x=>stokCheckOp(x));
+  PERDANA_OPS.forEach(x=>stokCheckOp(x));
+  // Transaksi totals
+  const p_nom=v('p_trx_tarik')+v('p_trx_transfer')+v('p_trx_pulsa')+v('p_trx_data');
+  const p_n=v('p_trx_tarik_n')+v('p_trx_transfer_n')+v('p_trx_pulsa_n')+v('p_trx_data_n');
+  s('p_trx_total',fmt(p_nom)); s('p_trx_total_n',p_n+' kali');
+  const c_nom=v('c_trx_tarik')+v('c_trx_transfer')+v('c_trx_pulsa')+v('c_trx_data');
+  const c_n=v('c_trx_tarik_n')+v('c_trx_transfer_n')+v('c_trx_pulsa_n')+v('c_trx_data_n');
+  s('c_trx_total',fmt(c_nom)); s('c_trx_total_n',c_n+' kali');
+  laciCheck('p');laciCheck('c');
+  s('c_dig_pakai',fmt(v('c_dig_awal')-v('c_dig_close')));
+  const omset=hitungOmset();
+  const prev=g('p_omset_preview');
+  if(prev){prev.textContent=fmt(omset);prev.style.color=omset>=0?'var(--green)':'var(--red)';}
+  if(pinUnlocked)updateHasil();
+}
+
+function stokCheckOp(item){
+  const awal=v('p_'+item+'_awal'), closing=v('p_'+item+'_close'), min=v('p_'+item+'_min');
+  const terjualEl=g('p_'+item+'_terjual');
+  if(terjualEl) terjualEl.textContent=Math.max(0,awal-closing);
+  const al=g('p_'+item+'_alert'), wn=g('p_'+item+'_warn');
+  if(!al||!wn) return;
+  if(min>0&&closing<=0){al.classList.add('show');wn.classList.remove('show');}
+  else if(min>0&&closing<=min){wn.classList.add('show');al.classList.remove('show');}
+  else{al.classList.remove('show');wn.classList.remove('show');}
+}
+
+// Legacy support
+function stokCheck(item){ stokCheckOp(item); }
+
+// === SO ACC HP ===
+let accBarang = JSON.parse(localStorage.getItem('acc_barang')||'[]');
+let trxAccHari = []; // transaksi acc hari ini
+
+function simpanAcc(){ try{localStorage.setItem('acc_barang', JSON.stringify(accBarang));}catch(e){} }
+
+function renderSoAcc(){
+  const rows = g('so_acc_rows');
+  const rekap = g('so_acc_rekap');
+  if(!rows) return;
+  if(accBarang.length===0){
+    rows.innerHTML='<div style="font-size:12px;color:var(--muted2);padding:8px 0;">Belum ada barang — klik "+ Tambah Barang"</div>';
+    if(rekap) rekap.innerHTML='— isi daftar barang terlebih dahulu —';
+    return;
+  }
+  rows.innerHTML = accBarang.map((b,i)=>`
+    <div style="display:grid;grid-template-columns:80px 1fr 80px 70px 50px;gap:6px;margin-bottom:6px;align-items:center">
+      <div style="font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:700">${b.kode}</div>
+      <div style="font-size:12px;font-weight:600">${b.nama}<br><span style="font-size:10px;color:var(--muted2)">${b.gudang}</span></div>
+      <div style="font-size:11px;color:var(--muted2)">SO: ${b.so_fisik||0}</div>
+      <input type="number" value="${b.so_fisik||0}" placeholder="0" 
+        oninput="accBarang[${i}].so_fisik=parseInt(this.value)||0;simpanAcc();renderRekapAcc()"
+        style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:6px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none;width:100%">
+      <button onclick="hapusBarangAcc(${i})" style="background:var(--rs);border:1px solid var(--red);border-radius:8px;padding:6px;color:var(--red);font-size:11px;cursor:pointer;">✕</button>
+    </div>`).join('');
+  renderRekapAcc();
+}
+
+function renderRekapAcc(){
+  const rekap = g('so_acc_rekap');
+  if(!rekap||accBarang.length===0) return;
+  // Hitung terjual per kode dari trxAccHari
+  const terjualMap = {};
+  trxAccHari.forEach(t=>{ terjualMap[t.kode]=(terjualMap[t.kode]||0)+t.jml; });
+
+  let html = '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px">';
+  html += '<tr style="color:var(--muted2);font-size:10px;font-family:var(--mono)">';
+  html += '<th style="text-align:left;padding:4px 6px">Kode</th><th style="text-align:left;padding:4px 6px">Nama</th><th style="text-align:left;padding:4px 6px">Gudang</th>';
+  html += '<th style="text-align:right;padding:4px 6px">SO Fisik</th><th style="text-align:right;padding:4px 6px">Terjual</th>';
+  html += '<th style="text-align:right;padding:4px 6px">Sisa Sistem</th><th style="text-align:right;padding:4px 6px">Selisih</th></tr>';
+
+  accBarang.forEach(b=>{
+    const terjual = terjualMap[b.kode]||0;
+    const sisaSistem = (b.so_fisik||0) - terjual;
+    const selisih = 0; // selisih antara fisik vs sistem, isi saat audit
+    const warna = sisaSistem < 0 ? 'var(--red)' : sisaSistem === 0 ? 'var(--orange)' : 'var(--green)';
+    html += `<tr style="border-top:1px solid var(--border)">
+      <td style="padding:6px;font-family:var(--mono);color:var(--accent);font-weight:700">${b.kode}</td>
+      <td style="padding:6px;font-weight:600">${b.nama}</td>
+      <td style="padding:6px;color:var(--muted2)">${b.gudang}</td>
+      <td style="padding:6px;text-align:right;font-family:var(--mono)">${b.so_fisik||0}</td>
+      <td style="padding:6px;text-align:right;font-family:var(--mono);color:var(--orange)">${terjual}</td>
+      <td style="padding:6px;text-align:right;font-family:var(--mono);color:${warna};font-weight:700">${sisaSistem}</td>
+      <td style="padding:6px;text-align:right;font-family:var(--mono);color:var(--muted2)">—</td>
+    </tr>`;
+  });
+  html += '</table></div>';
+  rekap.innerHTML = html;
+}
+
+function tambahBarangAcc(){
+  const kode = prompt('Kode barang:');
+  if(!kode) return;
+  const nama = prompt('Nama barang:');
+  if(!nama) return;
+  const gudang = prompt('Nama gudang (misal: Gudang 1):');
+  if(!gudang) return;
+  accBarang.push({kode:kode.toUpperCase(), nama, gudang, so_fisik:0});
+  simpanAcc();
+  renderSoAcc();
+  renderTrxAccOptions();
+}
+
+function hapusBarangAcc(i){
+  if(!confirm('Hapus barang ini?')) return;
+  accBarang.splice(i,1);
+  simpanAcc();
+  renderSoAcc();
+  renderTrxAccOptions();
+}
+
+// Transaksi Acc
+function tambahTrxAcc(){
+  const wrap = g('p_trx_acc_rows');
+  if(!wrap) return;
+  const idx = wrap.children.length;
+  const opts = accBarang.map(b=>`<option value="${b.kode}">${b.kode} — ${b.nama} (${b.gudang})</option>`).join('');
+  const row = document.createElement('div');
+  row.style.cssText='display:grid;grid-template-columns:90px 1fr 1fr 60px 36px;gap:6px;margin-bottom:6px;align-items:center';
+  row.innerHTML=`
+    <select onchange="syncKodeAcc(this,${idx})" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:6px;color:var(--text);font-size:11px;outline:none">
+      <option value="">Pilih</option>${opts}
+    </select>
+    <div id="trx_acc_nama_${idx}" style="font-size:11px;color:var(--muted2)">—</div>
+    <input type="number" id="trx_acc_nom_${idx}" placeholder="Nominal" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:6px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none">
+    <input type="number" id="trx_acc_jml_${idx}" placeholder="0" min="1" oninput="updateTrxAcc(${idx})" style="background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:6px;color:var(--text);font-family:var(--mono);font-size:12px;outline:none">
+    <button onclick="this.parentElement.remove();renderRekapAcc()" style="background:var(--rs);border:1px solid var(--red);border-radius:8px;padding:6px;color:var(--red);font-size:11px;cursor:pointer">✕</button>`;
+  wrap.appendChild(row);
+}
+
+function syncKodeAcc(sel, idx){
+  const kode = sel.value;
+  const barang = accBarang.find(b=>b.kode===kode);
+  const namaEl = g('trx_acc_nama_'+idx);
+  if(namaEl) namaEl.textContent = barang ? barang.nama+' ('+barang.gudang+')' : '—';
+}
+
+function updateTrxAcc(idx){
+  // rebuild trxAccHari dari semua baris
+  trxAccHari = [];
+  const wrap = g('p_trx_acc_rows');
+  if(!wrap) return;
+  Array.from(wrap.children).forEach((row,i)=>{
+    const sel = row.querySelector('select');
+    const jmlEl = g('trx_acc_jml_'+i);
+    if(sel&&sel.value&&jmlEl){
+      trxAccHari.push({kode:sel.value, jml:parseInt(jmlEl.value)||0});
+    }
+  });
+  renderRekapAcc();
+}
+
+function renderTrxAccOptions(){
+  // refresh semua select di baris trx acc
+  const wrap = g('p_trx_acc_rows');
+  if(!wrap) return;
+  const opts = accBarang.map(b=>`<option value="${b.kode}">${b.kode} — ${b.nama} (${b.gudang})</option>`).join('');
+  Array.from(wrap.children).forEach(row=>{
+    const sel = row.querySelector('select');
+    if(sel){ const val=sel.value; sel.innerHTML='<option value="">Pilih</option>'+opts; sel.value=val; }
+  });
+}
+
+function updateStokPerdana(op, val){
+  // Otomatis update stok closing perdana berdasarkan penjualan
+  const awal = v('p_'+op+'_awal');
+  const terjual = parseInt(val)||0;
+  const closeEl = g('p_'+op+'_close');
+  if(closeEl) closeEl.value = Math.max(0, awal - terjual);
+  calc();
+}
+
+// === AUDIT ACC COUNTDOWN ===
+function hitungAuditAcc(){
+  const AUDIT_MULAI = new Date('2026-03-19T00:00:00');
+  const INTERVAL_HARI = 14;
+  const now = new Date();
+  const selisihMs = now - AUDIT_MULAI;
+  const selisihHari = Math.floor(selisihMs / (1000*60*60*24));
+  const auditBerikutnya = new Date(AUDIT_MULAI);
+  const periodeKe = selisihMs < 0 ? 0 : Math.ceil(selisihHari/INTERVAL_HARI);
+  auditBerikutnya.setDate(AUDIT_MULAI.getDate() + periodeKe*INTERVAL_HARI);
+  const diffMs = auditBerikutnya - now;
+  const diffHari = Math.floor(diffMs/(1000*60*60*24));
+  const diffJam = Math.floor((diffMs%(1000*60*60*24))/(1000*60*60));
+  const tglStr = auditBerikutnya.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const el=g('audit-acc-countdown'), tgl=g('audit-acc-tanggal'), banner=g('audit-acc-banner');
+  if(!el) return;
+  if(diffMs<=0){
+    el.textContent='🔴 HARI INI — Audit Acc HP Sekarang!';
+    el.style.color='var(--red)';
+    if(banner) banner.style.borderColor='var(--red)';
+  } else if(diffHari===0){
+    el.textContent=`${diffJam} jam lagi`;
+    el.style.color='var(--orange)';
+  } else {
+    el.textContent=`${diffHari} hari ${diffJam} jam lagi`;
+    el.style.color=diffHari<=3?'var(--orange)':'var(--green)';
+    if(banner) banner.style.borderColor=diffHari<=3?'var(--orange)':'var(--orange)';
+  }
+  if(tgl) tgl.textContent='📅 '+tglStr;
+}
+hitungAuditAcc();
+setInterval(hitungAuditAcc, 60000);
+
+// Init SO Acc
+renderSoAcc();
+function hitungAudit(){
+  const AUDIT_MULAI = new Date('2026-03-18T00:00:00');
+  const INTERVAL_HARI = 14;
+  const now = new Date();
+  // Hitung audit berikutnya dari tanggal mulai
+  const selisihMs = now - AUDIT_MULAI;
+  const selisihHari = Math.floor(selisihMs / (1000*60*60*24));
+  let hariKe = selisihHari % INTERVAL_HARI;
+  let sisaHari = hariKe === 0 && selisihMs >= 0 ? 0 : INTERVAL_HARI - hariKe;
+  // Jika hari ini audit
+  const auditBerikutnya = new Date(AUDIT_MULAI);
+  auditBerikutnya.setDate(AUDIT_MULAI.getDate() + Math.ceil(selisihHari/INTERVAL_HARI)*INTERVAL_HARI);
+  // Hitung sisa waktu
+  const diffMs = auditBerikutnya - now;
+  const diffHari = Math.floor(diffMs/(1000*60*60*24));
+  const diffJam = Math.floor((diffMs%(1000*60*60*24))/(1000*60*60));
+  const diffMenit = Math.floor((diffMs%(1000*60*60))/(1000*60));
+  const tglStr = auditBerikutnya.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const el=g('audit-countdown'), tgl=g('audit-tanggal'), banner=g('audit-banner');
+  if(!el) return;
+  if(diffMs<=0){
+    el.textContent='🔴 HARI INI — Audit Stok Sekarang!';
+    el.style.color='var(--red)';
+    if(banner) banner.style.borderColor='var(--red)';
+  } else if(diffHari===0){
+    el.textContent=`${diffJam} jam ${diffMenit} menit lagi`;
+    el.style.color='var(--orange)';
+    if(banner) banner.style.borderColor='var(--orange)';
+  } else {
+    el.textContent=`${diffHari} hari ${diffJam} jam lagi`;
+    el.style.color=diffHari<=3?'var(--orange)':'var(--green)';
+    if(banner) banner.style.borderColor=diffHari<=3?'var(--orange)':'#6c63ff';
+  }
+  if(tgl) tgl.textContent='📅 '+tglStr;
+}
+hitungAudit();
+setInterval(hitungAudit, 60000); // update tiap menit
+
+function laciCheck(pfx){
+  const lv=v(pfx+'_laci');
+  if(lv>0&&lv!==300000){g(pfx+'_laci_warn').classList.add('show');g(pfx+'_laci_ket_wrap').style.display='block';g(pfx+'_laci').style.borderColor='var(--orange)';}
+  else{g(pfx+'_laci_warn').classList.remove('show');g(pfx+'_laci_ket_wrap').style.display='none';g(pfx+'_laci').style.borderColor='';}
+}
+
+function updateHasil(){
+  const dig2=APPS.reduce((sum,a)=>sum+(v('p_'+a+'_awal')-v('p_'+a+'_close')),0);
+  const cash=v('p_cash'),modal=v('p_modal_awal'),kasmod=v('p_tambah_kasmod'),keluar=v('p_makan')+v('p_lainlain');
+  const omset=cash+dig2-modal-kasmod-keluar;
+  const ho=g('h_omset');if(ho){ho.textContent=fmt(omset);ho.style.color=omset>=0?'var(--green)':'var(--red)';}
+  s('hf_cash','+ '+fmt(cash));s('hf_dig','+ '+fmt(dig2));
+  s('hf_modal','− '+fmt(modal));s('hf_kasmod','− '+fmt(kasmod));s('hf_keluar','− '+fmt(keluar));
+  const hfo=g('hf_omset');if(hfo){hfo.textContent=fmt(omset);hfo.style.color=omset>=0?'var(--green)':'var(--red)';}
+  if(omsetKemarin!==null)renderCmp(omset);
+  APPS.forEach(a=>s('h_'+a,fmt(v('p_'+a+'_awal')-v('p_'+a+'_close'))));
+  s('h_dig_tot',fmt(dig2));
+  ['bca','bni','bri','dana'].forEach(b=>{
+    const delta=v('p_'+b+'_close')-v('p_'+b+'_awal');
+    const el=g('h_'+b);if(el){el.textContent=fmtS(delta);el.style.color=delta>=0?'var(--green)':'var(--orange)';}
+  });
+  // Stok voucher & perdana per operator di hasil
+  const VOUCHER_OPS2=['vtsel','vxl','vaxis','vbyu','vsfren','vindo'];
+  const PERDANA_OPS2=['ptsel','pxl','paxis','pbyu','psfren','pindo'];
+  let totalVclose=0,totalVawal=0,totalVmin=0;
+  VOUCHER_OPS2.forEach(x=>{totalVclose+=v('p_'+x+'_close');totalVawal+=v('p_'+x+'_awal');totalVmin+=v('p_'+x+'_min');});
+  let totalPclose=0,totalPawal=0,totalPmin=0;
+  PERDANA_OPS2.forEach(x=>{totalPclose+=v('p_'+x+'_close');totalPawal+=v('p_'+x+'_awal');totalPmin+=v('p_'+x+'_min');});
+  const vc=totalVclose,vm=totalVmin,pc=totalPclose,pm=totalPmin;
+  s('h_v_stok',vc);s('h_v_jual',Math.max(0,totalVawal-vc));
+  s('h_v_sts',vm>0&&vc<=0?'🚨 HABIS':vm>0&&vc<=vm?'⚠️ MENIPIS':'✅ OK');
+  s('h_p_stok',pc);s('h_p_jual',Math.max(0,totalPawal-pc));
+  s('h_p_sts',pm>0&&pc<=0?'🚨 HABIS':pm>0&&pc<=pm?'⚠️ MENIPIS':'✅ OK');
+  // Warna kartu stok dinamis
+  const vCard=g('h_v_card'),pCard=g('h_p_card');
+  if(vCard){
+    vCard.className='sc '+(vm>0&&vc<=0?'sg-r':vm>0&&vc<=vm?'sg-y':'sg-g');
+    const vv=vCard.querySelector('.scv');if(vv)vv.style.color=vm>0&&vc<=0?'var(--red)':vm>0&&vc<=vm?'var(--yellow)':'var(--green)';
+  }
+  if(pCard){
+    pCard.className='sc '+(pm>0&&pc<=0?'sg-r':pm>0&&pc<=pm?'sg-y':'sg-g');
+    const pv=pCard.querySelector('.scv');if(pv)pv.style.color=pm>0&&pc<=0?'var(--red)':pm>0&&pc<=pm?'var(--yellow)':'var(--green)';
+  }
+  const wb=dig2>0?dig2:0;
+  s('h_wb_dig',fmt(wb));s('h_wb_bank',fmt(v('p_pinjam_bank')));s('h_wb_tot',fmt(wb+v('p_pinjam_bank')));
+  const cp=v('c_dig_awal')-v('c_dig_close'),cb=cp>0?cp:0,ct=cb+v('c_pinjam_bank'),cs=ct-v('c_tf_pusat');
+  s('h_c_dig',fmt(cb));s('h_c_bank',fmt(v('c_pinjam_bank')));s('h_c_tot',fmt(ct));
+  s('h_c_wajib',fmt(ct));s('h_c_tf',fmt(v('c_tf_pusat')));
+  const sb=g('h_c_sb');
+  if(ct===0){sb.className='sb sb-ok';s('h_c_sl','— Belum ada data');s('h_c_sv','Rp 0');}
+  else if(cs<=0){sb.className='sb sb-ok';s('h_c_sl','✅ LUNAS');s('h_c_sv',cs<0?'Lebih '+fmt(Math.abs(cs)):'Rp 0');}
+  else{sb.className='sb sb-danger';s('h_c_sl','🚨 MASIH KURANG');s('h_c_sv',fmt(cs));}
+}
+
+async function fetchOmsetKemarin(){
+  if(!SHEET_URL||SHEET_URL==='GANTI_DENGAN_WEB_APP_URL') return;
+  g('h_omset_load').style.display='block';g('h_omset_cmp').style.display='none';g('h_omset_nodata').style.display='none';
+  try{
+    const tgl=g('p_tgl').value;const d=tgl?new Date(tgl):new Date();d.setDate(d.getDate()-1);
+    const kemarin=d.toISOString().split('T')[0];
+    const res=await fetch(`${SHEET_URL}?action=getOmset&tanggal=${kemarin}&toko=Saudara Cell`);
+    const data=await res.json();
+    g('h_omset_load').style.display='none';
+    if(data.omset!==undefined&&data.omset!==null){omsetKemarin=data.omset;renderCmp(hitungOmset());}
+    else{g('h_omset_nodata').style.display='block';}
+  }catch(e){g('h_omset_load').style.display='none';g('h_omset_nodata').style.display='block';}
+}
+
+function renderCmp(today){
+  if(omsetKemarin===null)return;
+  const sel=today-omsetKemarin,pct=omsetKemarin>0?Math.round((sel/omsetKemarin)*100):0;
+  s('h_kem',fmt(omsetKemarin));
+  const dEl=g('h_diff'),tEl=g('h_trend');
+  if(sel>0){dEl.textContent='+'+fmt(sel);dEl.style.color='var(--green)';tEl.textContent='📈 +'+pct+'%';tEl.style.color='var(--green)';}
+  else if(sel<0){dEl.textContent='-'+fmt(Math.abs(sel));dEl.style.color='var(--red)';tEl.textContent='📉 '+pct+'%';tEl.style.color='var(--red)';}
+  else{dEl.textContent='Sama';dEl.style.color='var(--muted2)';tEl.textContent='➡️ 0%';tEl.style.color='var(--muted2)';}
+  g('h_omset_cmp').style.display='flex';g('h_omset_nodata').style.display='none';
+}
+
+// Google Forms URLs
+const FORM_URL_PUSAT = 'https://docs.google.com/forms/u/0/d/e/1FAIpQLSfUp3g_LhplIJEGjKpTzAnCdVJQyB12D98ARDD6wZ_7hiEpxQ/formResponse';
+
+async function kirimData(toko){
+  const btn=g(toko==='pusat'?'p_kirim_btn':'c_kirim_btn');
+  const statusEl=g(toko==='pusat'?'p_kirim_status':'c_kirim_status');
+
+  if(toko==='pusat'){
+    const tanggal=vs('p_tgl');
+    const karyawan=vs('p_nama');
+    if(!tanggal||!karyawan){statusEl.style.color='var(--orange)';statusEl.textContent='⚠️ Tanggal & nama wajib diisi!';return;}
+    btn.disabled=true;btn.textContent='⏳ Mengirim...';statusEl.textContent='';
+
+    const omset=hitungOmset();
+    const tarik_tunai_nom=v('p_trx_tarik')||0;
+    const tarik_tunai_jml=v('p_trx_tarik_n')||0;
+    const transfer_nom=v('p_trx_transfer')||0;
+    const transfer_jml=v('p_trx_transfer_n')||0;
+    const pulsa_nom=v('p_trx_pulsa')||0;
+    const pulsa_jml=v('p_trx_pulsa_n')||0;
+    const paket_nom=v('p_trx_data')||0;
+    const paket_jml=v('p_trx_data_n')||0;
+
+    const params=new URLSearchParams({
+      'entry.793831053': tanggal,
+      'entry.1661867346': karyawan,
+      'entry.1558037798': v('p_modal_awal')||0,
+      'entry.592414455': v('p_tambah_kasmod')||0,
+      'entry.1504215078': v('p_cash')||0,
+      'entry.1740369507': v('p_laci')||0,
+      'entry.1027723806': v('p_digital_awal')||0,
+      'entry.807388549': v('p_digital_close')||0,
+      'entry.542107674': v('p_digipos_awal')||0,
+      'entry.230271029': v('p_digipos_close')||0,
+      'entry.234923798': v('p_rita_awal')||0,
+      'entry.73138237': v('p_rita_close')||0,
+      'entry.950820890': v('p_sidiva_awal')||0,
+      'entry.1596645983': v('p_sidiva_close')||0,
+      'entry.1000833007': v('p_bcax_awal')||0,
+      'entry.1403635343': v('p_bcax_close')||0,
+      'entry.648736098': (v('p_vtsel_awal')||0)+(v('p_vxl_awal')||0)+(v('p_vaxis_awal')||0)+(v('p_vbyu_awal')||0)+(v('p_vsfren_awal')||0)+(v('p_vindo_awal')||0),
+      'entry.2124897488': (v('p_vtsel_close')||0)+(v('p_vxl_close')||0)+(v('p_vaxis_close')||0)+(v('p_vbyu_close')||0)+(v('p_vsfren_close')||0)+(v('p_vindo_close')||0),
+      'entry.809877076': (v('p_ptsel_awal')||0)+(v('p_pxl_awal')||0)+(v('p_paxis_awal')||0)+(v('p_pbyu_awal')||0)+(v('p_psfren_awal')||0)+(v('p_pindo_awal')||0),
+      'entry.1058689120': (v('p_ptsel_close')||0)+(v('p_pxl_close')||0)+(v('p_paxis_close')||0)+(v('p_pbyu_close')||0)+(v('p_psfren_close')||0)+(v('p_pindo_close')||0),
+      'entry.1143134692': v('p_bca_awal')||0,
+      'entry.1694037875': v('p_bca_close')||0,
+      'entry.1334197726': v('p_bni_awal')||0,
+      'entry.1485625133': v('p_bni_close')||0,
+      'entry.1135548654': v('p_bri_awal')||0,
+      'entry.1159945587': v('p_bri_close')||0,
+      'entry.1888770909': v('p_dana_awal')||0,
+      'entry.1029231990': v('p_dana_close')||0,
+      'entry.738429579': v('p_pinjam_bank')||0,
+      'entry.2064031463': tarik_tunai_nom,
+      'entry.140174665': tarik_tunai_jml,
+      'entry.912391981': transfer_nom,
+      'entry.476172269': transfer_jml,
+      'entry.274493889': pulsa_nom,
+      'entry.1669725609': pulsa_jml,
+      'entry.85776563': paket_nom,
+      'entry.689039926': paket_jml,
+      'entry.745043523': v('p_makan')||0,
+      'entry.1262261747': v('p_lainlain')||0,
+      'entry.373443779': vs('p_ket')||'',
+      'entry.1653400619': omset
+    });
+
+    try{
+      await fetch(FORM_URL_PUSAT, {method:'POST', mode:'no-cors', body:params,
+        headers:{'Content-Type':'application/x-www-form-urlencoded'}});
+      btn.textContent='✅ Terkirim!';btn.style.background='var(--green)';
+      statusEl.style.color='var(--green)';statusEl.textContent='Data berhasil dikirim ke Google Forms ✓';
+      setTimeout(()=>tampilMotivasi(vs('p_nama')),600);
+      setTimeout(()=>{btn.disabled=false;btn.textContent='📤 Kirim ke Sheets';btn.style.background='';statusEl.textContent='';},4000);
+    }catch(e){
+      btn.disabled=false;btn.textContent='📤 Kirim ke Sheets';
+      statusEl.style.color='var(--red)';statusEl.textContent='❌ Gagal kirim, cek koneksi';
+    }
+
+  }else{
+    // Cabang: masih pakai Apps Script (belum ada Google Form Cabang)
+    const tanggal=vs('c_tgl');
+    const karyawan=vs('c_nama');
+    if(!tanggal||!karyawan){statusEl.style.color='var(--orange)';statusEl.textContent='⚠️ Tanggal & nama wajib diisi!';return;}
+    if(!SHEET_URL||SHEET_URL==='GANTI_DENGAN_WEB_APP_URL'){statusEl.style.color='var(--orange)';statusEl.textContent='⚠️ URL Sheets belum diatur';return;}
+    btn.disabled=true;btn.textContent='⏳ Mengirim...';statusEl.textContent='';
+    const data={toko:'Cabang',tanggal,karyawan,
+      modal_awal:v('c_modal_awal'),cash_fisik:v('c_cash'),laci:v('c_laci'),ket_laci:vs('c_laci_ket'),
+      pinjam_bank:v('c_pinjam_bank'),digital_awal:v('c_dig_awal'),digital_close:v('c_dig_close'),
+      digital_pakai:v('c_dig_awal')-v('c_dig_close'),
+      pengeluaran_makan:v('c_makan'),pengeluaran_lain:v('c_lainlain'),keterangan:vs('c_ket'),
+      tf_ke_pusat:v('c_tf_pusat')};
+    try{
+      const encoded=encodeURIComponent(JSON.stringify(data));
+      await fetch(SHEET_URL+'?payload='+encoded,{method:'GET',mode:'no-cors'});
+      btn.textContent='✅ Terkirim!';btn.style.background='var(--green)';
+      statusEl.style.color='var(--green)';statusEl.textContent='Data berhasil dikirim ✓';
+      setTimeout(()=>tampilMotivasi(vs('c_nama')),600);
+      setTimeout(()=>{btn.disabled=false;btn.textContent='📤 Kirim ke Sheets';btn.style.background='';statusEl.textContent='';},3000);
+    }catch(e){btn.disabled=false;btn.textContent='📤 Kirim ke Sheets';statusEl.style.color='var(--red)';statusEl.textContent='❌ Gagal kirim, cek koneksi';}
+  }
+}
+
+function chipSingle(btn){btn.closest('.field,.card').querySelectorAll('.chip').forEach(c=>{if(c!==btn)c.classList.remove('on');});btn.classList.toggle('on');}
+document.addEventListener('input',calc);document.addEventListener('change',calc);
+const today=new Date().toISOString().split('T')[0];g('p_tgl').value=today;g('c_tgl').value=today;calc();
+
+// === MOTIVASI NEUROSAINS GEN Z ===
+const MOTIVASI=[
+  {emoji:'🔥',pesan:(n)=>`Makasih udah kerja keras hari ini, ${n} 🙏\n\nSerius deh — orang yang nyelesain tugasnya sampai tuntas kayak lo itu langka. Kebanyakan orang setengah-setengah. Lo nggak.`},
+  {emoji:'✨',pesan:(n)=>`Terima kasih ${n}, udah jaga amanah hari ini 💙\n\nTau nggak, otak lo barusan ngelepas dopamin — persis kayak waktu lo dapet kabar baik. Itu bukan kebetulan, itu hasil kerja lo sendiri.`},
+  {emoji:'🌟',pesan:(n)=>`${n}, makasih ya udah totalitas hari ini 🤝\n\nSetiap kali lo konsisten kayak gini, otak lo literally nyetak ulang siapa lo. Pelan-pelan, lo jadi versi terbaik lo — tanpa lo sadar.`},
+  {emoji:'💙',pesan:(n)=>`Terima kasih ${n} 🙏\n\nLo mungkin nggak sadar, tapi otak lo hari ini udah kerja keras banget. Dan sekarang dia lagi "menyimpan" semua yang lo pelajari hari ini. Besok lo bakal lebih siap.`},
+  {emoji:'🚀',pesan:(n)=>`${n}, makasih udah nggak nyerah hari ini 💪\n\nAda momen nggak enak, pasti ada. Tapi lo tetep selesain. Itu yang bikin otak lo makin kuat — bukan yang gampang, tapi yang tetep jalan meski berat.`},
+  {emoji:'🌈',pesan:(n)=>`Makasih ${n}, hari ini lo udah kasih yang terbaik 🌟\n\nOtak lo lagi produksi serotonin sekarang — hormon yang bikin lo ngerasa "gue cukup, gue worth it." Dan lo emang iya.`},
+  {emoji:'💎',pesan:(n)=>`${n}, terima kasih udah jadi bagian penting hari ini 🙏\n\nOrang luar mungkin nggak liat. Tapi otak lo nyimpen semuanya — setiap usaha, setiap detil yang lo jaga. Itu nggak ilang sia-sia.`},
+  {emoji:'⚡',pesan:(n)=>`Terima kasih ${n} 💛\n\nLo nggak harus jadi yang paling hebat hari ini. Lo cukup jadi yang nggak nyerah — dan lo udah buktiin itu. Besok tinggal ulang lagi.`},
+  {emoji:'🌙',pesan:(n)=>`${n}, makasih udah tuntas hari ini 🤍\n\nPulang, istirahat yang bener ya. Otak lo butuh tidur buat "upload" semua yang lo kerjain hari ini ke memori jangka panjang. Besok lo bakal lebih tajam.`},
+  {emoji:'🎯',pesan:(n)=>`Makasih ${n}, lo udah jaga kepercayaan hari ini 💪\n\nKonsistensi kayak gini yang akhirnya ngebedain orang biasa sama orang yang beneran tumbuh. Lo udah milih jalan yang kedua — terus.`},
+];
+
+function tampilMotivasi(nama){
+  const n = (nama||'Kamu').split(' ')[0];
+  const m=MOTIVASI[Math.floor(Math.random()*MOTIVASI.length)];
+  g('mot-emoji').textContent=m.emoji;
+  g('mot-pesan').innerHTML=m.pesan(n).replace(/\n/g,'<br>');
+  g('mot-modal').style.display='flex';
+  setTimeout(()=>tutupMotivasi(),10000);
+}
+function tutupMotivasi(){
+  const modal=g('mot-modal');
+  modal.style.opacity='0';
+  setTimeout(()=>{modal.style.display='none';modal.style.opacity='1';},400);
+}
+</script>
+
+<!-- MODAL MOTIVASI -->
+<div id="mot-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.8);align-items:center;justify-content:center;padding:24px;transition:opacity 0.4s;">
+  <div style="background:#18181f;border:1px solid #2a2a38;border-radius:24px;padding:36px 28px;max-width:340px;width:100%;text-align:center;box-shadow:0 8px 60px rgba(0,0,0,0.6);">
+    <div id="mot-emoji" style="font-size:48px;margin-bottom:20px;"></div>
+    <div id="mot-pesan" style="font-size:16px;line-height:1.8;color:#e2e2ee;margin-bottom:28px;text-align:left;"></div>
+    <button onclick="tutupMotivasi()" style="background:#6c63ff;color:#fff;border:none;border-radius:12px;padding:14px 28px;font-size:14px;font-weight:700;cursor:pointer;width:100%;">Makasih, siap! 💪</button>
+  </div>
+</div>
+</body>
+</html>
